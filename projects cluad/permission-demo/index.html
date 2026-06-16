@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Camera & Location Permission Demo</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 640px; margin: 40px auto; padding: 0 20px; line-height: 1.5; }
+  h1 { font-size: 1.4rem; }
+  section { border: 1px solid #ddd; border-radius: 8px; padding: 16px; margin-bottom: 20px; }
+  button { padding: 8px 16px; cursor: pointer; }
+  pre, video { background: #f5f5f5; border-radius: 6px; padding: 8px; max-width: 100%; }
+  .status { font-weight: bold; }
+  .note { color: #555; font-size: 0.9rem; }
+</style>
+</head>
+<body>
+  <h1>Browser Permission Demo</h1>
+  <p class="note">
+    This page demonstrates how websites request camera and location access.
+    Nothing happens until you explicitly click a button below, and your browser
+    will always show its own native "Allow / Block" prompt first — this page
+    cannot bypass that.
+  </p>
+
+  <section>
+    <h2>📍 Location</h2>
+    <button id="locBtn">Request Location Access</button>
+    <p class="status" id="locStatus">Not requested.</p>
+    <pre id="locOutput"></pre>
+  </section>
+
+  <section>
+    <h2>📷 Camera</h2>
+    <button id="camBtn">Request Camera Access</button>
+    <p class="status" id="camStatus">Not requested.</p>
+    <video id="camVideo" autoplay playsinline width="320" height="240" style="display:none;"></video>
+    <button id="camStopBtn" style="display:none;">Stop Camera</button>
+  </section>
+
+  <script>
+    const locBtn = document.getElementById('locBtn');
+    const locStatus = document.getElementById('locStatus');
+    const locOutput = document.getElementById('locOutput');
+
+    locBtn.addEventListener('click', () => {
+      locStatus.textContent = 'Requesting permission...';
+      navigator.geolocation.getCurrentPosition(
+        pos => {
+          locStatus.textContent = 'Access granted by user.';
+          locOutput.textContent =
+            `Latitude: ${pos.coords.latitude}\n` +
+            `Longitude: ${pos.coords.longitude}\n` +
+            `Accuracy: ${pos.coords.accuracy} m`;
+        },
+        err => {
+          locStatus.textContent = `Access denied or unavailable: ${err.message}`;
+        }
+      );
+    });
+
+    const camBtn = document.getElementById('camBtn');
+    const camStatus = document.getElementById('camStatus');
+    const camVideo = document.getElementById('camVideo');
+    const camStopBtn = document.getElementById('camStopBtn');
+    let camStream = null;
+
+    camBtn.addEventListener('click', async () => {
+      camStatus.textContent = 'Requesting permission...';
+      try {
+        camStream = await navigator.mediaDevices.getUserMedia({ video: true });
+        camStatus.textContent = 'Access granted by user. Live preview below.';
+        camVideo.srcObject = camStream;
+        camVideo.style.display = 'block';
+        camStopBtn.style.display = 'inline-block';
+      } catch (err) {
+        camStatus.textContent = `Access denied or unavailable: ${err.message}`;
+      }
+    });
+
+    camStopBtn.addEventListener('click', () => {
+      if (camStream) {
+        camStream.getTracks().forEach(track => track.stop());
+        camStream = null;
+      }
+      camVideo.style.display = 'none';
+      camStopBtn.style.display = 'none';
+      camStatus.textContent = 'Camera stopped.';
+    });
+  </script>
+</body>
+</html>
