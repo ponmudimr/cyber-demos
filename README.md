@@ -31,11 +31,14 @@ A collection of small technical demos, paired with a deep-dive cyber awareness g
 17. [Incident Response: What to Do When Something Goes Wrong](#incident-response-what-to-do-when-something-goes-wrong)
 18. [Security for Families and Children](#security-for-families-and-children)
 19. [Security for Small Businesses](#security-for-small-businesses)
-20. [Building a Personal and Organizational Security Culture](#building-a-personal-and-organizational-security-culture)
-21. [Quick Reference Checklists](#quick-reference-checklists)
-22. [Glossary of Terms](#glossary-of-terms)
-23. [Further Resources](#further-resources)
-24. [Closing Thoughts](#closing-thoughts)
+20. [AI and the Changing Face of Cybercrime](#ai-and-the-changing-face-of-cybercrime)
+21. [Common Online Scams Beyond Phishing](#common-online-scams-beyond-phishing)
+22. [Building a Personal and Organizational Security Culture](#building-a-personal-and-organizational-security-culture)
+23. [Quick Reference Checklists](#quick-reference-checklists)
+24. [Glossary of Terms](#glossary-of-terms)
+25. [Further Resources](#further-resources)
+26. [A Final Word on Risk Tolerance and Proportionality](#a-final-word-on-risk-tolerance-and-proportionality)
+27. [Closing Thoughts](#closing-thoughts)
 
 ---
 
@@ -636,6 +639,72 @@ Small businesses often assume they're not attractive targets, but limited securi
 - Assuming free antivirus and a firewall are sufficient without addressing the human element through training.
 - No tested backup — many businesses discover their backups were broken only after they need them.
 
+## AI and the Changing Face of Cybercrime
+
+Artificial intelligence has become a double-edged sword in cybersecurity: the same tools that help defenders detect threats faster are also lowering the skill bar for attackers and making old defenses less reliable.
+
+### How Attackers Are Using AI
+
+- **Better-written phishing emails**: Generative AI can produce fluent, grammatically correct, culturally appropriate phishing text in any language, eliminating one of the classic red flags (poor grammar) that used to help people spot scams.
+- **Voice cloning**: A few seconds of someone's voice — pulled from a social media video, a podcast, or a voicemail greeting — can be enough to generate convincing synthetic speech. This has been used in vishing attacks impersonating executives, family members, or kidnapping hoaxes demanding urgent payment.
+- **Deepfake video**: Real-time or pre-recorded video deepfakes have already been used to impersonate executives on video calls, authorizing fraudulent wire transfers that employees believed came from a trusted colleague they could see and hear.
+- **Automated reconnaissance**: AI tools can rapidly scrape and summarize a target's public social media, professional history, and writing style, making spear-phishing and pretexting attacks far faster to produce at scale.
+- **Malicious code generation**: While mainstream AI providers build in safeguards, attackers use jailbreak techniques or purpose-built malicious models to help write malware, phishing kits, or exploit code, somewhat lowering the technical barrier to entry for less skilled attackers.
+- **Chatbot impersonation scams**: Fake "customer support" chat widgets embedded in scam websites use AI to convincingly simulate a real support conversation, building trust before requesting payment or credentials.
+
+### Defending Against AI-Enhanced Threats
+
+- **Don't rely on "tells" that used to work.** Grammar and spelling are no longer reliable indicators of a scam; focus instead on verifying identity and intent independently of how polished a message looks or sounds.
+- **Establish verbal or visual "safe words"** with family members or within finance teams for high-stakes requests (large transfers, emergency money requests), agreed upon in advance and never shared over channels that could be intercepted.
+- **Treat unexpected video/voice calls requesting urgent action with the same skepticism as a phishing email** — hang up and call back using a known, independently verified number.
+- **Watch for subtle deepfake artifacts** when in doubt: unnatural blinking, lighting inconsistencies, audio that doesn't quite sync with lip movement, or a voice that sounds slightly flat or lacks natural background noise — though detection is becoming harder as the technology improves, so behavioral verification matters more than visual scrutiny.
+- **Be cautious about what you post publicly.** Voice clips, photos, and detailed biographical information all become training material for impersonation attempts against you or people who trust you.
+- **Use AI defensively too.** Many modern email and endpoint security tools now use machine learning to detect anomalous behavior and subtle phishing patterns that rule-based filters would miss — keep these features enabled rather than disabling them for convenience.
+
+### A Note on AI Chatbots and Personal Data
+
+When using AI assistants and chatbots, whether for work or personal tasks, treat the conversation the way you would any third-party service:
+
+- Avoid pasting sensitive personal data, credentials, or confidential business information into AI tools unless you understand and trust that provider's data handling and retention policies.
+- Be aware that some free AI tools may use conversation data to improve their models unless you've opted out or are using an enterprise tier with stronger data protections.
+- Verify factual claims from AI tools independently before acting on them, especially for security-relevant decisions; AI systems can produce confident-sounding but incorrect information.
+
+## Common Online Scams Beyond Phishing
+
+Beyond classic phishing, a wide range of scams specifically target the trust, hope, or urgency of everyday people. Recognizing the pattern of each helps you spot variations you haven't seen before.
+
+### Tech Support Scams
+
+A pop-up, phone call, or email claims your computer is infected and urges you to call a number or install "support" software, which is actually remote-access malware giving the scammer control of your machine. Legitimate tech companies do not proactively call you about infections or display phone numbers in alarming pop-ups. Close the browser (using your operating system's task manager if needed) rather than calling any number shown.
+
+### Fake Online Marketplaces and Shopping Scams
+
+Fraudulent online stores, often advertised through social media ads, offer heavily discounted goods that never arrive, or arrive as cheap counterfeits. Warning signs include prices far below market rate, a recently registered domain, no verifiable physical address or customer service contact, and payment requests via direct bank transfer or cryptocurrency rather than secured payment processors with buyer protection.
+
+### Investment and Cryptocurrency Scams
+
+Fraudulent investment platforms promise unrealistic, guaranteed returns, often showing fabricated dashboards that display growing "profits" to encourage larger deposits before the platform abruptly becomes inaccessible ("pig butchering" or "rug pull" schemes). Legitimate investments never guarantee high returns with no risk; be especially cautious of opportunities introduced through a romantic or unexpectedly friendly online relationship.
+
+### Lottery and Prize Scams
+
+A message claims you've won a lottery, prize, or sweepstakes you never entered, but must pay a "processing fee" or "tax" upfront to receive it. Legitimate prizes never require an upfront payment to release winnings.
+
+### Fake Job Offers
+
+Scammers post attractive remote job listings, conduct a quick "interview" over chat, and then either request payment for training materials/equipment, or send a fraudulent check and ask the victim to wire back a portion as "overpayment" — the check later bounces, leaving the victim liable for the wired funds. Verify employers independently, never pay for a job, and be suspicious of any role that primarily involves receiving and forwarding money.
+
+### Grandparent and Family Emergency Scams
+
+A caller impersonates a grandchild or relative claiming to be in trouble (arrested, in an accident, stranded abroad) and pressures the victim to send money urgently, often asking them not to tell other family members. The combination of urgency, secrecy, and a request for unconventional payment (gift cards, wire transfer, cryptocurrency) is a strong indicator of fraud — hang up and call the family member directly using a known number.
+
+### Charity and Disaster Relief Scams
+
+Following major news events or natural disasters, fraudulent charities spring up quickly to capture well-intentioned donations. Verify any charity through independent charity evaluation organizations before donating, and prefer giving directly through a charity's official website rather than via a link in an email, text, or social media post.
+
+### Subscription and Renewal Scams
+
+Fake renewal notices for antivirus software, streaming services, or domain registrations urge immediate payment or "your service will be cancelled," often containing a phone number to call that connects to a scammer posing as customer support, who then requests remote access or payment details. Always verify renewal status by logging into the official account/website directly rather than through a link or number in the notice.
+
 ## Building a Personal and Organizational Security Culture
 
 ### For Individuals
@@ -724,6 +793,21 @@ When seeking more information, prioritize official and well-established sources:
 - Your country's national cybercrime reporting center, bookmarked in advance of needing it.
 - Official vendor security pages (your OS, browser, and major service providers publish their own security best-practice guides specific to their products).
 - Reputable, independent security news outlets for staying current on emerging scam trends and major breaches.
+
+## A Final Word on Risk Tolerance and Proportionality
+
+Not every recommendation in this guide applies with equal force to every person or situation, and treating all of them as mandatory, all the time, is itself a recipe for burnout and abandoned good habits. Security is fundamentally about managing risk proportionally to what's actually at stake, not about achieving some unattainable state of absolute safety.
+
+A useful way to think about this is in terms of cost versus benefit. Enabling a password manager and MFA on your email account costs a few minutes of setup and almost no ongoing friction, while the benefit — protecting the account that can reset nearly every other account you own — is enormous. That's a trade clearly worth making for nearly everyone. On the other hand, obsessively avoiding all cloud services or refusing to ever use public Wi-Fi might reduce risk marginally, but the cost in lost convenience may not be worth it for most people, especially when lighter-weight mitigations (a VPN, sticking to HTTPS) address most of the real risk.
+
+When deciding how much effort to invest in a given precaution, consider:
+
+- **What's the actual value of what you're protecting?** A throwaway account for a one-time forum signup doesn't need the same password rigor as your primary bank login.
+- **What's the realistic likelihood of this specific threat affecting you?** Some risks are common and worth defending against by default (phishing, password reuse); others are rare and worth only light awareness (highly targeted nation-state espionage, for most private individuals).
+- **What's the blast radius if it goes wrong?** Accounts that gate access to other accounts (email, password managers, identity providers) deserve disproportionate protection because compromising them compromises everything downstream.
+- **How reversible is the harm?** Financial fraud is often at least partially recoverable through banks and insurers; the permanent loss of irreplaceable photos or the public leak of private messages is not. Weight your defenses accordingly.
+
+This proportionality principle is also why organizations use formal risk assessments rather than applying every possible control everywhere uniformly — security resources, whether time, money, or attention, are finite, and the goal is to spend them where they reduce the most risk. The same logic scales down comfortably to a single household or individual: pick the handful of high-leverage habits (unique passwords via a password manager, MFA everywhere it's offered, regular backups, healthy skepticism toward urgent requests, and prompt software updates) and make those close to automatic, while treating everything else in this guide as a deeper reference to draw on as your circumstances — a new job, a new device, a new family member online for the first time — change.
 
 ## Closing Thoughts
 
