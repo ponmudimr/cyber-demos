@@ -1,4 +1,4 @@
-# tech-demos
+# cyber-demos
 
 A collection of small technical demos, paired with a deep-dive cyber awareness guide for anyone who wants to understand modern digital threats and how to defend against them.
 
