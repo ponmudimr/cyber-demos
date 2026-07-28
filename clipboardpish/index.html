@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crack-Time Console — cyber-demos</title>
+<style>
+  :root{
+    --bg: #0a0e0d;
+    --panel: #0f1513;
+    --line: #1c2624;
+    --amber: #ffb000;
+    --amber-dim: #8f6300;
+    --cyan: #4fd8eb;
+    --text: #c8d6d2;
+    --text-dim: #6f8580;
+    --red: #ff5d5d;
+    --green: #6fdc8c;
+  }
+  *{ box-sizing: border-box; }
+  html,body{
+    margin:0; padding:0; background: var(--bg); color: var(--text);
+    font-family: 'IBM Plex Mono', 'Courier New', monospace;
+  }
+  body{
+    min-height:100vh;
+    display:flex; align-items:flex-start; justify-content:center;
+    padding: 48px 20px 80px;
+  }
+  .scanlines{
+    position:fixed; inset:0; pointer-events:none;
+    background: repeating-linear-gradient(
+      to bottom, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px,
+      transparent 1px, transparent 3px
+    );
+    mix-blend-mode: overlay;
+  }
+  .console{
+    width:100%; max-width: 760px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    border-radius: 4px;
+    box-shadow: 0 0 0 1px rgba(255,176,0,0.03), 0 30px 80px rgba(0,0,0,0.6);
+  }
+  .titlebar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--line);
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .titlebar .dot{ color: var(--green); }
+  .titlebar .dot.live::before{ content:"● "; }
+  .body{ padding: 28px 28px 8px; }
+  .eyebrow{
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--cyan); margin-bottom: 6px;
+  }
+  h1{
+    font-size: 22px; margin: 0 0 6px; color: var(--text); font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+  .sub{ font-size: 13px; color: var(--text-dim); margin: 0 0 26px; line-height:1.6; max-width: 56ch;}
+
+  .prompt-row{
+    display:flex; align-items:center; gap:10px;
+    border: 1px solid var(--line); border-radius: 3px;
+    padding: 12px 14px; background: #0c1211;
+  }
+  .prompt-row .chevron{ color: var(--amber); font-weight:700; }
+  #pw{
+    flex:1; background: transparent; border: none; outline: none;
+    color: var(--text); font-family: inherit; font-size: 15px;
+    letter-spacing: 0.03em;
+  }
+  #pw::placeholder{ color: var(--text-dim); }
+  .toggle{
+    background:none; border: 1px solid var(--line); color: var(--text-dim);
+    font-family: inherit; font-size: 10px; letter-spacing: 0.08em;
+    padding: 5px 8px; border-radius: 3px; cursor:pointer; text-transform: uppercase;
+  }
+  .toggle:hover{ color: var(--amber); border-color: var(--amber-dim); }
+
+  .readout{
+    margin-top: 30px;
+    border-top: 1px dashed var(--line);
+    padding-top: 26px;
+  }
+  .big-time{
+    font-size: 42px; color: var(--amber); font-weight: 700;
+    line-height:1.1; letter-spacing: 0.01em;
+    text-shadow: 0 0 18px rgba(255,176,0,0.25);
+  }
+  .big-time.instant{ color: var(--red); text-shadow: 0 0 18px rgba(255,93,93,0.25); }
+  .big-time-label{
+    font-size: 11px; color: var(--text-dim); letter-spacing: 0.15em; text-transform: uppercase; margin-top:4px;
+  }
+
+  .meter{
+    display:flex; gap:4px; margin: 18px 0 4px;
+  }
+  .meter span{
+    height: 6px; flex:1; background: var(--line); border-radius: 2px;
+    transition: background 0.25s ease;
+  }
+
+  .stats{
+    display:grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+    margin-top: 22px;
+  }
+  .stat{
+    border: 1px solid var(--line); border-radius: 3px; padding: 10px 12px;
+    background: #0c1211;
+  }
+  .stat .k{ font-size: 10px; color: var(--text-dim); letter-spacing: 0.1em; text-transform: uppercase; }
+  .stat .v{ font-size: 16px; color: var(--cyan); margin-top: 4px; }
+
+  table.rates{
+    width:100%; border-collapse: collapse; margin-top: 24px; font-size: 12.5px;
+  }
+  table.rates caption{
+    text-align:left; font-size: 11px; color: var(--text-dim);
+    letter-spacing: 0.1em; text-transform: uppercase; margin-bottom:10px;
+  }
+  table.rates th, table.rates td{
+    border-top: 1px solid var(--line); padding: 8px 6px; text-align:left;
+  }
+  table.rates th{ color: var(--text-dim); font-weight: 400; font-size: 11px; }
+  table.rates td.time{ color: var(--amber); }
+
+  .flag{
+    margin-top: 18px; padding: 10px 12px; border-radius: 3px;
+    border: 1px solid rgba(255,93,93,0.4); background: rgba(255,93,93,0.06);
+    color: var(--red); font-size: 12.5px; display:none;
+  }
+  .flag.show{ display:block; }
+
+  .footer-note{
+    margin-top: 30px; padding: 16px 28px 22px; border-top: 1px solid var(--line);
+    font-size: 11.5px; color: var(--text-dim); line-height:1.7;
+  }
+  .footer-note b{ color: var(--text); }
+  a{ color: var(--cyan); }
+
+  @media (max-width: 520px){
+    .stats{ grid-template-columns: 1fr 1fr; }
+    .big-time{ font-size: 32px; }
+  }
+</style>
+</head>
+<body>
+<div class="scanlines"></div>
+<div class="console">
+  <div class="titlebar">
+    <span>cyber-demos // crack-time-console</span>
+    <span class="dot live">local, nothing leaves this tab</span>
+  </div>
+  <div class="body">
+    <div class="eyebrow">Live entropy readout</div>
+    <h1>How long would it take to crack that password?</h1>
+    <p class="sub">Type anything below. This runs entirely in your browser — nothing is sent anywhere, logged, or stored. It estimates crack time using character-set entropy against a few real-world attacker speeds.</p>
+
+    <div class="prompt-row">
+      <span class="chevron">&gt;</span>
+      <input id="pw" type="text" placeholder="type a password to test..." autocomplete="off" spellcheck="false">
+      <button class="toggle" id="toggleMask">show</button>
+    </div>
+
+    <div class="flag" id="commonFlag">⚠ this is one of the most common leaked passwords on record — it would be tried in the first few seconds regardless of length.</div>
+
+    <div class="readout">
+      <div class="big-time instant" id="bigTime">—</div>
+      <div class="big-time-label" id="bigTimeLabel">to crack offline (fast hash, GPU rig)</div>
+
+      <div class="meter" id="meter">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><div class="k">Length</div><div class="v" id="statLen">0</div></div>
+        <div class="stat"><div class="k">Charset size</div><div class="v" id="statCharset">0</div></div>
+        <div class="stat"><div class="k">Entropy (bits)</div><div class="v" id="statEntropy">0.0</div></div>
+      </div>
+
+      <table class="rates">
+        <caption>Estimated time to crack, by attacker capability</caption>
+        <thead>
+          <tr><th>Scenario</th><th>Guess rate</th><th>Est. time</th></tr>
+        </thead>
+        <tbody id="ratesBody"></tbody>
+      </table>
+    </div>
+
+    <div class="footer-note">
+      <b>Why this matters:</b> length beats complexity. A 20-character passphrase of random unrelated words usually beats a 10-character password stuffed with symbols, because crack time scales exponentially with length. See the <a href="../../README.md">Passwords and Authentication</a> section of the awareness guide for the full picture — password managers, MFA, and passkeys.
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const pw = document.getElementById('pw');
+  const bigTime = document.getElementById('bigTime');
+  const bigTimeLabel = document.getElementById('bigTimeLabel');
+  const statLen = document.getElementById('statLen');
+  const statCharset = document.getElementById('statCharset');
+  const statEntropy = document.getElementById('statEntropy');
+  const ratesBody = document.getElementById('ratesBody');
+  const meter = document.getElementById('meter').children;
+  const commonFlag = document.getElementById('commonFlag');
+  const toggleMask = document.getElementById('toggleMask');
+
+  // A small sample of frequently leaked passwords, for demo purposes only.
+  const COMMON = new Set(["123456","password","123456789","12345678","qwerty","abc123","password1",
+    "111111","123123","letmein","welcome","monkey","football","iloveyou","admin","dragon","master",
+    "sunshine","princess","login","passw0rd","starwars","freedom","whatever","trustno1"]);
+
+  const SCENARIOS = [
+    { label: "Online, throttled login", rate: 10,              note: "10 guesses/sec" },
+    { label: "Offline, slow hash (bcrypt)", rate: 10000,        note: "10K guesses/sec" },
+    { label: "Offline, fast hash (GPU rig)", rate: 10000000000, note: "10B guesses/sec" },
+    { label: "Nation-state cluster",         rate: 1000000000000, note: "1T guesses/sec" },
+  ];
+
+  function charsetSize(s){
+    let size = 0;
+    if(/[a-z]/.test(s)) size += 26;
+    if(/[A-Z]/.test(s)) size += 26;
+    if(/[0-9]/.test(s)) size += 10;
+    if(/[^a-zA-Z0-9]/.test(s)) size += 33;
+    return size || 1;
+  }
+
+  function fmtTime(seconds){
+    if(!isFinite(seconds)) return "effectively never";
+    if(seconds < 1) return "instantly";
+    const units = [
+      ["century", 100*365.25*86400],
+      ["year", 365.25*86400],
+      ["day", 86400],
+      ["hour", 3600],
+      ["minute", 60],
+      ["second", 1],
+    ];
+    for(const [name, size] of units){
+      if(seconds >= size){
+        const n = seconds / size;
+        const rounded = n >= 100 ? Math.round(n).toLocaleString() : n.toFixed(1);
+        return `${rounded} ${name}${n >= 1.5 ? 's' : ''}`;
+      }
+    }
+    return "instantly";
+  }
+
+  function update(){
+    const val = pw.value;
+    const len = val.length;
+    const cs = charsetSize(val);
+    const entropyBits = len > 0 ? len * Math.log2(cs) : 0;
+    const isCommon = COMMON.has(val.toLowerCase());
+
+    statLen.textContent = len;
+    statCharset.textContent = len ? cs : 0;
+    statEntropy.textContent = entropyBits.toFixed(1);
+
+    commonFlag.classList.toggle('show', isCommon && len > 0);
+
+    // strength meter: 0-5 segments based on entropy, floored to 0 if common
+    const bars = isCommon ? 0 : Math.max(0, Math.min(5, Math.floor(entropyBits / 16)));
+    const colors = ["var(--red)","var(--red)","var(--amber-dim)","var(--amber)","var(--green)","var(--green)"];
+    for(let i=0;i<meter.length;i++){
+      meter[i].style.background = i < bars ? colors[bars] : 'var(--line)';
+    }
+
+    // headline: fast-hash offline scenario
+    const fastRate = 10000000000;
+    const guesses = Math.pow(2, entropyBits) / 2;
+    const seconds = isCommon ? 0.001 : (len === 0 ? 0 : guesses / fastRate);
+
+    if(len === 0){
+      bigTime.textContent = "—";
+      bigTime.classList.add('instant');
+    } else if(isCommon || seconds < 1){
+      bigTime.textContent = isCommon ? "instantly (known leaked password)" : fmtTime(seconds);
+      bigTime.classList.add('instant');
+    } else {
+      bigTime.textContent = fmtTime(seconds);
+      bigTime.classList.toggle('instant', seconds < 3600);
+    }
+
+    // rates table
+    ratesBody.innerHTML = "";
+    SCENARIOS.forEach(sc => {
+      const g = Math.pow(2, entropyBits) / 2;
+      const t = isCommon ? 0.001 : (len === 0 ? NaN : g / sc.rate);
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${sc.label}</td><td>${sc.note}</td><td class="time">${len===0 ? '—' : fmtTime(t)}</td>`;
+      ratesBody.appendChild(tr);
+    });
+  }
+
+  toggleMask.addEventListener('click', () => {
+    const masked = pw.type === 'password';
+    pw.type = masked ? 'text' : 'password';
+    toggleMask.textContent = masked ? 'hide' : 'show';
+  });
+
+  pw.addEventListener('input', update);
+  update();
+})();
+</script>
+</body>
+</html>
